@@ -25,21 +25,22 @@ if response.status_code != 201:
     exit()
 
 sensor_response = response.json()
-print("✅ 센서 데이터 전송 성공:", sensor_response)
+print("✅ 센서 데이터 전송 성공:")
+print(f"  📌 저장된 센서 데이터: {sensor_response.get('sensor_data')}")
+print(f"  📈 평가 점수 (environmental_score): {sensor_response.get('environmental_score')}")
 
 # 모든 센서 데이터 조회
-print(f"\n[GET] 모든 센서 데이터 조회 ({sensor_data_url})")
+print(f"\n[GET] 모든 센서 데이터 조회 요청 → {sensor_data_url}")
 response = requests.get(sensor_data_url)
 
 # 응답 상태 코드와 본문 확인
-print("응답 상태 코드:", response.status_code)
-print("응답 본문:", response.text)
-
-# 응답 본문이 JSON인 경우에만 .json() 호출
-if response.status_code == 200 and response.text:
+if response.status_code == 200 and response.headers.get("Content-Type", "").startswith("application/json"):
     try:
-        print("📊 센서 데이터 목록:", response.json())
+        data = response.json()
+        print("📊 센서 데이터 목록:")
+        for d in data.get("sensor_data", []):
+            print(f"  - {d}")
     except ValueError:
-        print("응답 본문이 JSON 형식이 아닙니다:", response.text)
+        print("❌ 응답 본문이 JSON 형식이 아닙니다:", response.text)
 else:
-    print("응답이 비어있거나 JSON 형식이 아닙니다.")
+    print("❌ 응답이 비어있거나 JSON 형식이 아닙니다.")
