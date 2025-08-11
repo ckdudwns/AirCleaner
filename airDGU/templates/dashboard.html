@@ -1,0 +1,68 @@
+<!-- templates/dashboard.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>환경 센서 대시보드</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+        h2 { margin-top: 40px; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 40px; background: white; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #f0f0f0; }
+        tr:nth-child(even) { background-color: #fafafa; }
+    </style>
+</head>
+<body>
+    <h1>🌱 환경 데이터 대시보드</h1>
+
+    <h2>📡 ESP32 센서 측정값</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>시간</th><th>온도</th><th>습도</th><th>CO₂eq</th><th>TVOC</th>
+                <th>PM2.5</th><th>PM10</th><th>점수</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in sensor_data %}
+            <tr>
+                <td>{{ row.measured_at }}</td>
+                <td>{{ row.temperature }}</td>
+                <td>{{ row.humidity }}</td>
+                <td>{{ row.co2eq }}</td>
+                <td>{{ row.tvoc }}</td>
+                <td>{{ row.pm2_5 }}</td>
+                <td>{{ row.pm10 }}</td>
+                <td>{{ row.environmental_score or "" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>🌬️ 에어코리아 데이터</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>시간</th><th>PM10</th><th>PM2.5</th><th>PM10 등급</th><th>PM2.5 등급</th>
+                <th>O₃</th><th>NO₂</th><th>CO</th><th>SO₂</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in air_korea %}
+            <tr>
+                <td>{{ row.timestamp }}</td>
+                <td>{{ row.pm10 }}</td>
+                <td>{{ row.pm2_5 }}</td>
+                <td>{{ row.pm10_category }}</td>
+                <td>{{ row.pm2_5_category }}</td>
+                <td>{{ row.o3 }}</td>
+                <td>{{ row.no2 }}</td>
+                <td>{{ row.co }}</td>
+                <td>{{ row.so2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

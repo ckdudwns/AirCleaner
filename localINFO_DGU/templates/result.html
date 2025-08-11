@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>대기질 결과</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    h2, h3 { margin: 8px 0; }
+    table { border-collapse: collapse; width: 100%; margin: 18px 0; }
+    th, td { border: 1px solid #999; padding: 8px; text-align: center; }
+    th { background: #f2f2f2; }
+    .meta { color: #555; font-size: 14px; }
+    .search { margin-bottom: 16px; }
+    .search input { padding: 8px; width: 60%; }
+    .search button { padding: 8px 12px; }
+  </style>
+</head>
+<body>
+  <!-- 상단 재검색 폼 -->
+  <div class="search">
+    <form action="/search" method="post">
+      <input type="text" name="q" value="{{ raw_query }}" />
+      <button type="submit">다시 검색</button>
+    </form>
+  </div>
+
+  <h2>🔎 입력: {{ raw_query }}</h2>
+  <p class="meta">인식 유형: {{ search_type }}{% if place_name %} / 장소명: {{ place_name }}{% endif %}</p>
+
+  <h3>📍 기준 주소</h3>
+  <p class="meta">
+    {{ address }}<br>
+    위도: {{ lat }} / 경도: {{ lon }} / TM: ({{ tmX }}, {{ tmY }})
+  </p>
+
+  <!-- 실시간 테이블 -->
+  <h3>실시간 대기질</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>측정소</th>
+        <th>주소</th>
+        <th>측정 시각</th>
+        <th>PM10 (㎍/㎥)</th>
+        <th>PM10 등급</th>
+        <th>PM2.5 (㎍/㎥)</th>
+        <th>PM2.5 등급</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in realtime %}
+      <tr>
+        <td>{{ row.stationName }}</td>
+        <td>{{ row.address }}</td>
+        <td>{{ row.timestamp }}</td>
+        <td>{{ row.pm10_ug_m3 }}</td>
+        <td>{{ row.pm10_category }}</td>
+        <td>{{ row.pm2_5_ug_m3 }}</td>
+        <td>{{ row.pm2_5_category }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- 월간 테이블 -->
+  <h3>월간 평균 ({{ month_range.begin }} ~ {{ month_range.end }})</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>측정소</th>
+        <th>월(YYYYMM)</th>
+        <th>PM10 평균(㎍/㎥)</th>
+        <th>PM2.5 평균(㎍/㎥)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in monthly %}
+      <tr>
+        <td>{{ m.stationName }}</td>
+        <td>{{ m.month }}</td>
+        <td>{{ m.pm10_avg }}</td>
+        <td>{{ m.pm2_5_avg }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>
