@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>대기질 검색</title>
+  <style>
+    body { font-family: sans-serif; margin: 40px; max-width: 720px; }
+    h1 { margin-bottom: 12px; }
+    form { display: flex; gap: 8px; }
+    input[type="text"] { flex: 1; padding: 10px; font-size: 16px; }
+    button { padding: 10px 16px; font-size: 16px; cursor: pointer; }
+    .hint { color: #666; margin-top: 8px; }
+    .error { color: #b00020; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h1>대기질 검색</h1>
+
+  {% if error %}
+    <div class="error">❌ {{ error }}</div>
+  {% endif %}
+
+  <form action="/search" method="post">
+    <input type="text" name="q" placeholder="예) 전북 전주시 완산구 덕적골2길 66 또는 전주 시청" value="{{ q or '' }}" autofocus />
+    <button type="submit">검색</button>
+  </form>
+
+  <p class="hint">도로명 주소 또는 장소명을 입력하세요.</p>
+</body>
+</html>
